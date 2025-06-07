@@ -31,6 +31,7 @@
             menuStrip1 = new MenuStrip();
             administrareToolStripMenuItem = new ToolStripMenuItem();
             dateCompanieToolStripMenuItem = new ToolStripMenuItem();
+            administrareUATToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -46,7 +47,7 @@
             // 
             // administrareToolStripMenuItem
             // 
-            administrareToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dateCompanieToolStripMenuItem });
+            administrareToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dateCompanieToolStripMenuItem, administrareUATToolStripMenuItem });
             administrareToolStripMenuItem.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             administrareToolStripMenuItem.Name = "administrareToolStripMenuItem";
             administrareToolStripMenuItem.Size = new Size(99, 23);
@@ -55,8 +56,15 @@
             // dateCompanieToolStripMenuItem
             // 
             dateCompanieToolStripMenuItem.Name = "dateCompanieToolStripMenuItem";
-            dateCompanieToolStripMenuItem.Size = new Size(180, 24);
+            dateCompanieToolStripMenuItem.Size = new Size(185, 24);
             dateCompanieToolStripMenuItem.Text = "Date companie";
+            // 
+            // administrareUATToolStripMenuItem
+            // 
+            administrareUATToolStripMenuItem.Name = "administrareUATToolStripMenuItem";
+            administrareUATToolStripMenuItem.Size = new Size(185, 24);
+            administrareUATToolStripMenuItem.Text = "Administrare UAT";
+            administrareUATToolStripMenuItem.Click += administrareUATToolStripMenuItem_Click;
             // 
             // frmMain
             // 
@@ -80,5 +88,6 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem administrareToolStripMenuItem;
         private ToolStripMenuItem dateCompanieToolStripMenuItem;
+        private ToolStripMenuItem administrareUATToolStripMenuItem;
     }
 }

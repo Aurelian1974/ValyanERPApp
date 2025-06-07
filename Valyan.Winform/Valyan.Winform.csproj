@@ -12,9 +12,15 @@
 
   <ItemGroup>
     <Folder Include="Administrare\Partneri\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
+    <PackageReference Include="Syncfusion.DataGridExport.WinForms" Version="29.2.9" />
+    <PackageReference Include="Syncfusion.Grid.Grouping.Windows" Version="29.2.9" />
+    <PackageReference Include="Syncfusion.SfDataGrid.WinForms" Version="29.2.9" />
     <PackageReference Include="Syncfusion.Tools.Windows" Version="29.2.9" />
   </ItemGroup>
 
