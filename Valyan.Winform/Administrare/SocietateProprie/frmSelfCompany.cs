@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Valyan.Winform.Main
+namespace Valyan.Winform.Administrare.SocietateProprie
 {
-    public partial class frmMain : Form
+    public partial class frmSelfCompany : Form
     {
-        public frmMain()
+        public frmSelfCompany()
         {
             InitializeComponent();
         }
