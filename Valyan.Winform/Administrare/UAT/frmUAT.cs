@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 //using Valyan.Shared.Models;
 //using Valyan.Shared.Data;
 //using Valyan.Shared.Controllers;
+using Syncfusion.Windows.Forms.Tools;
+using Syncfusion.Windows.Forms.Grid;
 
 
 
@@ -24,9 +27,8 @@ namespace Valyan.Winform.Administrare
     {
         private readonly JudetController _controller;
         private List<Judet> _judete = new();
-
-        // Fix for CS0120: Change the usage of DbConnectionFactory.CreateConnection() to create an instance of DbConnectionFactory first.
-
+        private bool _hasUnsavedChanges = false; // Flag pentru modificări nesalvate
+        private DataSet dsOrase; // Add this field
         public frmUAT()
         {
             InitializeComponent();
@@ -40,19 +42,77 @@ namespace Valyan.Winform.Administrare
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             var configuration = configurationBuilder.Build();
 
-            var dbConnectionFactory = new DbConnectionFactory(configuration); // Pass the configuration instance
-            var connection = dbConnectionFactory.CreateConnection(); // Use the instance to call CreateConnection()
+            var dbConnectionFactory = new DbConnectionFactory(configuration); 
+            var connection = dbConnectionFactory.CreateConnection();
+            // Initialize the dataset
+            InitializeOraseDataSet(connection);
             var repo = new JudetRepository(connection);
             _controller = new JudetController(repo);
 
             tabControlUAT.SelectedIndexChanged += TabControlUAT_SelectedIndexChanged;
             sfDataGrid1.SelectionChanged += SfDataGrid1_SelectionChanged;
+            sfDataGrid1.DataSourceChanged += (s, e) =>
+            {
+                if (sfDataGrid1.Columns != null && sfDataGrid1.Columns.Any(col => col.MappingName == "IdJudet"))
+                {
+                    var column = sfDataGrid1.Columns.FirstOrDefault(col => col.MappingName == "IdJudet");
+                    if (column != null)
+                    {
+                        column.Visible = false;
+                    }
+                }
+            };
             btnAdaugare.Click += BtnAdaugare_Click;
             btnModificare.Click += BtnModificare_Click;
             btnStergere.Click += BtnStergere_Click;
             txtCodJudet.TextChanged += txtCodJudet_TextChanged;
             txtDenumireJudet.TextChanged += txtDenumireJudet_TextChanged;
-            txtCodSiruta.TextChanged += txtCodSiruta_TextChanged; // adaugă această linie
+            txtCodSiruta.TextChanged += txtCodSiruta_TextChanged;
+        }
+
+        private void InitializeOraseDataSet(IDbConnection connection)
+        {
+            try
+            {
+                dsOrase = new DataSet("Orase");
+                using (var adapter = new SqlDataAdapter("SELECT * FROM Oras", (SqlConnection)connection))
+                {
+                    adapter.Fill(dsOrase, "Oras");
+                }
+
+                // Bind standard ComboBox
+                comboBox1.DataSource = dsOrase.Tables["Oras"];
+                comboBox1.DisplayMember = "Nume";
+                comboBox1.ValueMember = "Nume";
+
+                // Bind Syncfusion ComboBoxAdv
+                comboBoxAdv1.DataSource = dsOrase.Tables["Oras"];
+                comboBoxAdv1.DisplayMember = "Nume";
+                comboBoxAdv1.ValueMember = "Nume";
+
+                // Bind Syncfusion AutoComplete ComboBox
+                comboBoxAutoComplete1.DataSource = dsOrase.Tables["Oras"];
+                comboBoxAutoComplete1.DisplayMember = "Nume";
+                comboBoxAutoComplete1.ValueMember = "Nume";
+
+                // Bind Syncfusion MultiColumn ComboBox
+                multiColumnComboBox1.DataSource = dsOrase.Tables["Oras"];
+                multiColumnComboBox1.DisplayMember = "Nume";
+                multiColumnComboBox1.ValueMember = "Nume";
+
+               
+                
+
+                // Bind Syncfusion SfComboBox
+                sfComboBox1.DataSource = dsOrase.Tables["Oras"];
+                sfComboBox1.DisplayMember = "Nume";
+                sfComboBox1.ValueMember = "Nume";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Eroare la încărcarea datelor: {ex.Message}", "Eroare",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private async void frmUAT_Load(object sender, EventArgs e)
@@ -64,20 +124,44 @@ namespace Valyan.Winform.Administrare
                 _judete = await _controller.GetAllAsync();
                 sfDataGrid1.DataSource = _judete;
                 await UpdateButtonStates();
-                // dezactivează butoane conform regulilor
             }
         }
-
+        private bool _isHandlingTabChange = false; 
         private async void TabControlUAT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControlUAT.SelectedTab == tabPageJudet)
+            if (_isHandlingTabChange) return; // Prevent recursive calls
+
+            _isHandlingTabChange = true;
+            try
             {
-                txtCodJudet.Text = "";
-                txtDenumireJudet.Text = "";
-                txtCodSiruta.Text = "";
-                _judete = await _controller.GetAllAsync();
-                sfDataGrid1.DataSource = _judete;
-                // dezactivează butoane conform regulilor
+                if (_hasUnsavedChanges)
+                {
+                    var result = MessageBox.Show(
+                        "Există modificări nesalvate. Doriți să continuați fără salvare?",
+                        "Confirmare",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+
+                    if (result == DialogResult.No)
+                    {
+                        tabControlUAT.SelectedTab = tabPageJudet; 
+                        return;
+                    }
+                    _hasUnsavedChanges = false;
+                }
+
+                if (tabControlUAT.SelectedTab == tabPageJudet)
+                {
+                    txtCodJudet.Text = "";
+                    txtDenumireJudet.Text = "";
+                    txtCodSiruta.Text = "";
+                    _judete = await _controller.GetAllAsync();
+                    sfDataGrid1.DataSource = _judete;
+                }
+            }
+            finally
+            {
+                _isHandlingTabChange = false;
             }
         }
 
@@ -88,7 +172,6 @@ namespace Valyan.Winform.Administrare
                 txtCodJudet.Text = j.CodJudet;
                 txtDenumireJudet.Text = j.Nume;
                 txtCodSiruta.Text = j.Siruta?.ToString() ?? string.Empty;
-                // activează butoane Modificare/Stergere
             }
         }
 
@@ -120,6 +203,7 @@ namespace Valyan.Winform.Administrare
                 }
 
                 await _controller.AddAsync(new Judet { CodJudet = cod, Nume = nume, Siruta = siruta });
+                _hasUnsavedChanges = false;
                 txtCodJudet.Text = txtDenumireJudet.Text = txtCodSiruta.Text = "";
                 _judete = await _controller.GetAllAsync();
                 sfDataGrid1.DataSource = _judete;
@@ -171,6 +255,7 @@ namespace Valyan.Winform.Administrare
                 selectedJudet.Siruta = siruta;
 
                 await _controller.UpdateAsync(selectedJudet);
+                _hasUnsavedChanges = false;
                 txtCodJudet.Text = txtDenumireJudet.Text = txtCodSiruta.Text = "";
                 _judete = await _controller.GetAllAsync();
                 sfDataGrid1.DataSource = _judete;
@@ -195,16 +280,19 @@ namespace Valyan.Winform.Administrare
 
         private void txtCodJudet_TextChanged(object sender, EventArgs e)
         {
+            _hasUnsavedChanges = true;
             UpdateButtonStates();
         }
 
         private void txtDenumireJudet_TextChanged(object sender, EventArgs e)
         {
+            _hasUnsavedChanges = true;
             UpdateButtonStates();
         }
 
         private void txtCodSiruta_TextChanged(object sender, EventArgs e)
         {
+            _hasUnsavedChanges = true;
             if (!string.IsNullOrEmpty(txtCodSiruta.Text) &&
     !       int.TryParse(txtCodSiruta.Text, out _))
             {
@@ -269,6 +357,37 @@ namespace Valyan.Winform.Administrare
             btnModificare.Enabled = toateCompletate && exista;
             btnStergere.Enabled = toateCompletate && exista;
             //btnStergere.Enabled = sfDataGrid1.SelectedItem is Judet;
+        }
+
+
+        // Verifică la închiderea formei
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "Există modificări nesalvate. Doriți să închideți fără salvare?",
+                    "Confirmare",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = true; // Anulează închiderea
+                    return;
+                }
+            }
+
+            base.OnFormClosing(e);
+        }
+
+        // Metodă helper pentru a reseta flag-ul și câmpurile
+        private void ResetForm()
+        {
+            txtCodJudet.Text = "";
+            txtDenumireJudet.Text = "";
+            txtCodSiruta.Text = "";
+            _hasUnsavedChanges = false;
         }
     }
 }
