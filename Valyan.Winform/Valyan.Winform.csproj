@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	<ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +21,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
     <PackageReference Include="Syncfusion.DataGridExport.WinForms" Version="29.2.9" />
     <PackageReference Include="Syncfusion.Grid.Grouping.Windows" Version="29.2.9" />
+    <PackageReference Include="Syncfusion.Grid.Windows" Version="29.2.9" />
     <PackageReference Include="Syncfusion.SfDataGrid.WinForms" Version="29.2.9" />
+    <PackageReference Include="Syncfusion.Shared.Base" Version="29.2.9" />
     <PackageReference Include="Syncfusion.Tools.Windows" Version="29.2.9" />
   </ItemGroup>
 

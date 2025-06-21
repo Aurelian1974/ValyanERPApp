@@ -36,6 +36,14 @@ namespace Valyan.Winform.Administrare
             btnModificare.Enabled = false;
             btnStergere.Enabled = false;
 
+            // Enable filtering
+            sfDataGrid1.AllowFiltering = true;
+            sfDataGrid1.FilterRowPosition = Syncfusion.WinForms.DataGrid.Enums.RowPosition.Top;
+
+            // Enable grouping
+            sfDataGrid1.AllowGrouping = true;
+            sfDataGrid1.ShowGroupDropArea = true;
+
             // Create an instance of IConfiguration to pass to DbConnectionFactory
             var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)

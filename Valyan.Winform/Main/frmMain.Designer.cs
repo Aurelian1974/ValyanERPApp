@@ -58,6 +58,7 @@
             dateCompanieToolStripMenuItem.Name = "dateCompanieToolStripMenuItem";
             dateCompanieToolStripMenuItem.Size = new Size(185, 24);
             dateCompanieToolStripMenuItem.Text = "Date companie";
+            dateCompanieToolStripMenuItem.Click += dateCompanieToolStripMenuItem_Click;
             // 
             // administrareUATToolStripMenuItem
             // 

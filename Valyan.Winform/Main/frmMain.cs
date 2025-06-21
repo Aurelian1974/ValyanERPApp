@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Valyan.Winform.Administrare; // Asigură-te că ai referința corectă la namespace-ul UAT
+using Valyan.Winform.Administrare;
+using Valyan.Winform.Administrare.SocietateProprie; // Asigură-te că ai referința corectă la namespace-ul UAT
 
 namespace Valyan.Winform.Main
 {
@@ -21,6 +22,14 @@ namespace Valyan.Winform.Main
         private void administrareUATToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var frm = new frmUAT())
+            {
+                frm.ShowDialog(this); // deschide modal peste frmMain
+            }
+        }
+
+        private void dateCompanieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var frm = new frmSelfCompany())
             {
                 frm.ShowDialog(this); // deschide modal peste frmMain
             }
