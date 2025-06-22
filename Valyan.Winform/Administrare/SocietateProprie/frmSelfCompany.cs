@@ -19,7 +19,7 @@ namespace Valyan.Winform.Administrare.SocietateProprie
         {
             InitializeComponent();
             rbtGrupDeFirme.CheckedChanged += rbtGrupDeFirme_CheckedChanged;
-            rbtGrupDeFirme_CheckedChanged(null, null); // setează starea inițială
+            rbtGrupDeFirme_CheckedChanged(this, EventArgs.Empty); // setează starea inițială
             btnAddAddress.Click += btnAddAddress_Click;
         }
 
@@ -36,14 +36,14 @@ namespace Valyan.Winform.Administrare.SocietateProprie
 
 
 
-        private void rbtGrupDeFirme_CheckedChanged(object sender, EventArgs e)
+        private void rbtGrupDeFirme_CheckedChanged(object? sender, EventArgs e)
         {
             bool isGrupChecked = rbtGrupDeFirme.Checked;
             txtCodFiscal.Enabled = !isGrupChecked;
             txtAtributFiscal.Enabled = !isGrupChecked;
         }
 
-        private void btnAddAddress_Click(object sender, EventArgs e)
+        private void btnAddAddress_Click(object? sender, EventArgs e)
         {
             using (var frm = new AdresaPartener(this))
             {

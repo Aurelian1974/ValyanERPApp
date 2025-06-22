@@ -10,8 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Valyan.API.Controllers;
+using Valyan.API.Interfaces;
+using Valyan.API.Repositories;
 using Valyan.Shared.Data;
-using Valyan.Shared.Controllers;
+
 
 
 namespace Valyan.Winform.Administrare.SocietateProprie
@@ -28,7 +31,7 @@ namespace Valyan.Winform.Administrare.SocietateProprie
             this.button1.Click += button1_Click;
         }
 
-        private void AdresaPartener_Load(object sender, EventArgs e)
+        private void AdresaPartener_Load(object? sender, EventArgs e)
         {
             LoadJudeteInCombo();
         }
@@ -42,7 +45,11 @@ namespace Valyan.Winform.Administrare.SocietateProprie
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
-                string connectionString = configuration.GetConnectionString("DefaultConnection");
+                string? connectionString = configuration.GetConnectionString("DefaultConnection");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured or is null.");
+                }
 
                 var judete = JudetDataAccess.GetAllJudete(connectionString);
 
@@ -64,7 +71,7 @@ namespace Valyan.Winform.Administrare.SocietateProprie
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -73,8 +80,11 @@ namespace Valyan.Winform.Administrare.SocietateProprie
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
-                string connectionString = configuration.GetConnectionString("DefaultConnection");
-
+                string? connectionString = configuration.GetConnectionString("DefaultConnection");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured or is null.");
+                }
                 // Inițializează repository și controller
                 IPartnerRepository repo = new PartnerRepository(connectionString);
                 var controller = new PartnerController(repo);

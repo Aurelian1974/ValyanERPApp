@@ -2,7 +2,10 @@ using Dapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Valyan.API.Interfaces;
 
+namespace Valyan.API.Repositories
+{ }
 public class JudetRepository : IJudetRepository
 {
     private readonly IDbConnection _connection;

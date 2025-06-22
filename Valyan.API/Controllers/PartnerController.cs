@@ -1,7 +1,8 @@
-﻿using Valyan.Shared.Data;
+﻿using Valyan.API.Interfaces;
+using Valyan.Shared.Data;
 
 
-namespace Valyan.Shared.Controllers
+namespace Valyan.API.Controllers
 {
     public class PartnerController
     {

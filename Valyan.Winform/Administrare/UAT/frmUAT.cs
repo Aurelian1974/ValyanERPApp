@@ -17,9 +17,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 //using Valyan.Shared.Controllers;
 using Syncfusion.Windows.Forms.Tools;
 using Syncfusion.Windows.Forms.Grid;
-
-
-
+using Valyan.API.Controllers;
 
 namespace Valyan.Winform.Administrare
 {
@@ -28,7 +26,7 @@ namespace Valyan.Winform.Administrare
         private readonly JudetController _controller;
         private List<Judet> _judete = new();
         private bool _hasUnsavedChanges = false; // Flag pentru modificări nesalvate
-        private DataSet dsOrase; // Add this field
+        private DataSet dsOrase = new DataSet(); // Initialize the field to avoid nullability issues
         public frmUAT()
         {
             InitializeComponent();
@@ -123,7 +121,7 @@ namespace Valyan.Winform.Administrare
             }
         }
 
-        private async void frmUAT_Load(object sender, EventArgs e)
+        private async void frmUAT_Load(object? sender, EventArgs e)
         {
             if (tabControlUAT.SelectedTab == tabPageJudet)
             {
@@ -135,7 +133,7 @@ namespace Valyan.Winform.Administrare
             }
         }
         private bool _isHandlingTabChange = false; 
-        private async void TabControlUAT_SelectedIndexChanged(object sender, EventArgs e)
+        private async void TabControlUAT_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (_isHandlingTabChange) return; // Prevent recursive calls
 
@@ -173,7 +171,7 @@ namespace Valyan.Winform.Administrare
             }
         }
 
-        private void SfDataGrid1_SelectionChanged(object sender, EventArgs e)
+        private void SfDataGrid1_SelectionChanged(object? sender, EventArgs e)
         {
             if (sfDataGrid1.SelectedItem is Judet j)
             {
@@ -183,7 +181,7 @@ namespace Valyan.Winform.Administrare
             }
         }
 
-        private async void BtnAdaugare_Click(object sender, EventArgs e)
+        private async void BtnAdaugare_Click(object? sender, EventArgs e)
         {
             var cod = txtCodJudet.Text.Trim();
             var nume = txtDenumireJudet.Text.Trim();
@@ -223,7 +221,7 @@ namespace Valyan.Winform.Administrare
             }
         }
 
-        private async void BtnModificare_Click(object sender, EventArgs e)
+        private async void BtnModificare_Click(object? sender, EventArgs e)
         {
             if (!(sfDataGrid1.SelectedItem is Judet selectedJudet))
                 return;
@@ -275,7 +273,7 @@ namespace Valyan.Winform.Administrare
             }
         }
 
-        private async void BtnStergere_Click(object sender, EventArgs e)
+        private async void BtnStergere_Click(object? sender, EventArgs e)
         {
             if (sfDataGrid1.SelectedItem is Judet j)
             {
@@ -286,23 +284,23 @@ namespace Valyan.Winform.Administrare
             }
         }
 
-        private void txtCodJudet_TextChanged(object sender, EventArgs e)
+        private void txtCodJudet_TextChanged(object? sender, EventArgs e)
         {
             _hasUnsavedChanges = true;
-            UpdateButtonStates();
+            _ = UpdateButtonStates(); // Explicitly discard the task
         }
 
-        private void txtDenumireJudet_TextChanged(object sender, EventArgs e)
+        private void txtDenumireJudet_TextChanged(object? sender, EventArgs e)
         {
             _hasUnsavedChanges = true;
-            UpdateButtonStates();
+            _ = UpdateButtonStates(); // Explicitly discard the task
         }
 
-        private void txtCodSiruta_TextChanged(object sender, EventArgs e)
+        private void txtCodSiruta_TextChanged(object? sender, EventArgs e)
         {
             _hasUnsavedChanges = true;
             if (!string.IsNullOrEmpty(txtCodSiruta.Text) &&
-    !       int.TryParse(txtCodSiruta.Text, out _))
+                !int.TryParse(txtCodSiruta.Text, out _))
             {
                 txtCodSiruta.BackColor = Color.LightPink;
                 toolTip1.Show("Câmpul trebuie să fie numeric!", txtCodSiruta);
@@ -313,8 +311,9 @@ namespace Valyan.Winform.Administrare
                 toolTip1.Hide(txtCodSiruta);
             }
 
-            UpdateButtonStates();
+            _ = UpdateButtonStates(); // Explicitly discard the task
         }
+
         private bool ValidateSiruta(string sirutaText, out int siruta)
         {
             siruta = 0; // Inițializează siruta cu 0

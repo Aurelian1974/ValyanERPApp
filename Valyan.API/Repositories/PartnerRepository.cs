@@ -1,9 +1,11 @@
 using System.Data;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Valyan.API.Interfaces;
 
 
-namespace Valyan.Shared.Data
+namespace Valyan.API.Repositories
+
 {
     public class PartnerRepository : IPartnerRepository
     {

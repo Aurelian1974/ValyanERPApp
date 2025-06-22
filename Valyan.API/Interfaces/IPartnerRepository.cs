@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 
-namespace Valyan.Shared.Data
+namespace Valyan.API.Interfaces    
 {
     public interface IPartnerRepository
     {
