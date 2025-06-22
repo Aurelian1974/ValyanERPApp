@@ -48,13 +48,14 @@
             cmbJudet.AlphaBlendSelectionColor = Color.FromArgb(64, 22, 165, 220);
             cmbJudet.BackColor = Color.White;
             cmbJudet.Filter = null;
-            cmbJudet.Location = new Point(321, 29);
+            cmbJudet.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cmbJudet.Location = new Point(12, 52);
             cmbJudet.MaxDropDownItems = 10;
             cmbJudet.MetroColor = Color.FromArgb(22, 165, 220);
             cmbJudet.Name = "cmbJudet";
             cmbJudet.ScrollMetroColorTable = metroColorTable1;
             cmbJudet.SelectedIndex = -1;
-            cmbJudet.Size = new Size(231, 21);
+            cmbJudet.Size = new Size(231, 27);
             cmbJudet.Sorted = true;
             cmbJudet.Style = Syncfusion.Windows.Forms.VisualStyle.Metro;
             cmbJudet.TabIndex = 4;

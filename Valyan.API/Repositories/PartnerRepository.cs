@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Valyan.API.Interfaces;
@@ -48,6 +48,16 @@ namespace Valyan.API.Repositories
                 JudetGuid = address.JudetGuid,
                 PartnerGUID = address.PartnerGUID // <-- Add this parameter
             }, commandType: CommandType.StoredProcedure);
+        }
+
+        public bool ExistsWithHoldingOrGroupId1()
+        {
+            using var conn = new SqlConnection(_connectionString);
+            // Procedura stocată returnează 1 dacă există, altfel 0
+            var result = conn.QueryFirstOrDefault<int>(
+                "dbo.ExistsPartnerWithHoldingOrGroupId1",
+                commandType: CommandType.StoredProcedure);
+            return result == 1;
         }
     }
 }
